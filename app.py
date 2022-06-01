@@ -35,7 +35,7 @@ def load_contract():
         certificate_abi = json.load(f)
 
     # Set the contract address (this is the address of the deployed contract)
-    contract_address = Web3.toChecksumAddress(0x88fe134209d8e6bbc8cff4a081c23fc8b0aba365)
+    contract_address = Web3.toChecksumAddress(0x6e31a3782be35af8e7a1a79df6ac9365d003e2ed)
 
     # Get the contract
     contract = w3.eth.contract(
@@ -120,7 +120,7 @@ if account == "Artist":
     address = st.text_input("artist_address")
     artwork_name = st.text_input("Enter the name of the artwork")
     artist_name = st.text_input("Enter the artist name")
-    initial_appraisal_value = st.text_input("Enter the initial appraisal amount")
+    initial_appraisal_value = st.number_input("Enter the initial appraisal amount in eth")
 
     # Use the Streamlit `file_uploader` function create the list of digital image file types(jpg, jpeg, or png) that will be uploaded to Pinata.
     file = st.file_uploader("Upload Artwork", type=["jpg", "jpeg", "png"])
@@ -129,14 +129,14 @@ if account == "Artist":
         # Use the `pin_artwork` helper function to pin the file to IPFS
         artwork_ipfs_hash = pin_artwork(artwork_name, file)
 
-        artwork_uri = f"ipfs://{artwork_ipfs_hash}"
+        tokenURI = f"https://gateway.pinata.cloud/ipfs/{artwork_ipfs_hash}"
 
         tx_hash = contract.functions.registerArtwork(
             address,
             artwork_name,
             artist_name,
             int(initial_appraisal_value),
-            artwork_uri
+            tokenURI
         ).transact({'from': address, 'gas': 1000000})
         receipt = w3.eth.waitForTransactionReceipt(tx_hash)
         st.write("Transaction receipt mined:")
@@ -146,11 +146,13 @@ if account == "Artist":
     st.markdown("---")
 
     if st.button("art_collection"):
-        art_collection = contract.functions.artCollection(0x8FeDec17fB9A312525754B5Ed8Add6c216D90F99)
+        art_collection = contract.functions.artCollection(address)
       
-    token_id = st.text_input("enter the token id of the artwork you want to auction")
+    token_id = st.number_input("enter the token id of the artwork you want to auction")
     if st.button("create auction"):
         creacteAuction = contract.functions.createAuction("token_id")
+    if st.button("end auction"):
+        endAuction = contract.funtion.endAuction("token_id")
         
     ###########################################################################       
     ######## DONOR
@@ -168,13 +170,9 @@ if account == "Donor":
     ###### Buyer
     ##############################################################################        
 if account == "Buyer":
-
+    
     st.multiselect('pick the art article being auction', ['auction1','auction2', 'auction3'])
-    
-    
-
-
-    sender = st.text_input('Enter account address')
+    sender = st.text_input('Enter your account address')
     if st.button("Place bid"):
         bid = second_contract.functions.bid(sender)
         highestBidder = second_contract.functions.highestBidder()
