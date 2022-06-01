@@ -6,7 +6,7 @@ import "./UkraineAuction.sol";
 
 contract UkraineArtMarket is ERC721Full, Ownable {
 
-    constructor() ERC721Full("UkraineArtMarket", "ART") public {}
+    constructor() ERC721Full("UkraineArtMarket", "UAM") public {}
       struct Artwork {
         string name;
         string artist;
