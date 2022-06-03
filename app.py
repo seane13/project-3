@@ -35,7 +35,7 @@ def load_contract():
         certificate_abi = json.load(f)
 
     # Set the contract address (this is the address of the deployed contract)
-    contract_address = Web3.toChecksumAddress(0x6e31a3782be35af8e7a1a79df6ac9365d003e2ed)
+    contract_address = Web3.toChecksumAddress(0x2136e58f3b5c2f134dec7601e52e657e38c6e839)
 
     # Get the contract
     contract = w3.eth.contract(
@@ -170,17 +170,23 @@ if account == "Donor":
     ###### Buyer
     ##############################################################################        
 if account == "Buyer":
+    image1 = Image.open('./images/Fight.jpg')
+    image2 = Image.open('./images/Protection.jpg')
+    image3 = Image.open('./images/The Ancestors.jpg')
+    st.image(image1, caption='Fight')
+    st.image(image2, caption='Protection')
+    st.image(image3, caption='The Ancestors')
+
+    st.multiselect('pick the art item being auctioned', ['Fight','Protection', 'The Ancestors'])
     
-    st.multiselect('pick the art article being auction', ['auction1','auction2', 'auction3'])
-    sender = st.text_input('Enter your account address')
-    if st.button("Place bid"):
-        bid = second_contract.functions.bid(sender)
+    dsender = st.text_input('Enter account address')
+if st.button("Place bid"):
+        bid_hash = second_contract.functions.bid(sender).transact()
         highestBidder = second_contract.functions.highestBidder()
         if highestBidder == sender:
             st.success("Congratulation you won the auction")
             st.balloons()
             
-
 
 
 
