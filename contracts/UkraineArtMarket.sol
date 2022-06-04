@@ -19,20 +19,20 @@ contract UkraineArtMarket is ERC721Full, Ownable {
         address sender_address;
     }
 
-    using Counters for Counters.Counter;
+    // using Counters for Counters.Counter;
 
-    Counters.Counter token_ids;
+    // Counters.Counter token_ids;
 
     address payable foundation_address = msg.sender;
 
-    uint256 id = 0;
+    // uint256 id = 0;
     mapping(uint => Contributors) public contributor;
     mapping(uint => UkraineAuction) public auctions;
     mapping(uint256 => Artwork) public artCollection;
-    modifier artRegistered(uint token_id) {
-        require(_exists(token_id), "Art not registered!");
-        _;
-    }
+    // modifier artRegistered(uint token_id) {
+    //    require(_exists(token_id), "Art not registered!");
+    //    _;
+    // }
 
      function registerArtwork(
         address owner,
