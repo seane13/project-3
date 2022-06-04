@@ -1,12 +1,12 @@
 import os
 import json
-
 from web3 import Web3
 from pathlib import Path
 from dotenv import load_dotenv
 import streamlit as st
+from PIL import Image
 from pinata import pin_file_to_ipfs, pin_json_to_ipfs, convert_data_to_json
-
+import time as pd
 load_dotenv("key.env")
 
 # Define and connect a new Web3 provider
@@ -20,7 +20,9 @@ w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
 st.title("Art Auction Fundraiser")
 st.markdown("### Ukraine aid auction")
 
-st.image('https://www.networkforgood.com/wp-content/uploads/shutterstock_1703436250-scaled.jpg')
+#st.image('https://www.networkforgood.com/wp-content/uploads/shutterstock_1703436250-scaled.jpg')
+image4 = Image.open('./images/Evacuation.png')
+st.image(image4, caption='Evacuation')
 
 st.markdown("## Welcome to our Art Auction Fundraiser, to support non-profit organizations, This market serves to raise funds for the Ukraine invation by auctioning art donated by different artist, please place a bid!!  ")
 
@@ -179,8 +181,8 @@ if account == "Buyer":
 
     st.multiselect('pick the art item being auctioned', ['Fight','Protection', 'The Ancestors'])
     
-    dsender = st.text_input('Enter account address')
-if st.button("Place bid"):
+    sender = st.text_input('Enter account address')
+    if st.button("Place bid"):
         bid_hash = second_contract.functions.bid(sender).transact()
         highestBidder = second_contract.functions.highestBidder()
         if highestBidder == sender:
