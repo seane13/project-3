@@ -138,7 +138,11 @@ if account == "Artist":
             artwork_name,
             artist_name,
             int(initial_appraisal_value),
+<<<<<<< HEAD
             tokenURI
+=======
+            # artwork_uri
+>>>>>>> 544ec708e0ed5ae4f0f4e2c8f1d38764b5fdd543
         ).transact({'from': address, 'gas': 1000000})
         receipt = w3.eth.waitForTransactionReceipt(tx_hash)
         st.write("Transaction receipt mined:")
@@ -147,6 +151,7 @@ if account == "Artist":
         st.markdown(f"[Artwork IPFS Gateway Link](https://ipfs.io/ipfs/{artwork_ipfs_hash})")
     st.markdown("---")
 
+<<<<<<< HEAD
     if st.button("art_collection"):
         art_collection = contract.functions.artCollection(address)
       
@@ -155,14 +160,32 @@ if account == "Artist":
         creacteAuction = contract.functions.createAuction("token_id")
     if st.button("end auction"):
         endAuction = contract.funtion.endAuction("token_id")
+=======
+    # if st.button("art_collection"):
+       # art_collection = contract.functions.artCollection(0x8FeDec17fB9A312525754B5Ed8Add6c216D90F99)
+      
+    # token_id = st.text_input("enter the token id of the artwork you want to auction")
+    if st.button("create auction"):
+        tokens = contract.functions.totalSupply().call()
+        token_id = st.selectbox("Choose an Art Token ID", tokens[-1])
+        creacteAuction = contract.functions.createAuction(token_id).call()
+>>>>>>> 544ec708e0ed5ae4f0f4e2c8f1d38764b5fdd543
         
     ###########################################################################       
     ######## DONOR
     #############################################################################
 if account == "Donor":
+<<<<<<< HEAD
     st.sidebar.radio('Select one:', ['Bitcoin', 'Etherium', "Dogecoin", "XRP", "Solana"])
     amount = st.text_input("Enter amount you want to donate");
     contributor_address = st.text_input("Enter account address");
+=======
+    st.sidebar.radio('Select one:', ['Bitcoin', 'Ethereum', "Dogecoin", "XRP", "Solana"])
+    donor_name = st.text_input("Enter Name", value='', key=0)
+    amount = st.text_input("Enter amount you want to donate", value=0, key=1)
+    contributor_address = st.text_input("Enter account address", value='', key=2)
+    
+>>>>>>> 544ec708e0ed5ae4f0f4e2c8f1d38764b5fdd543
     
     if st.button("donate now"):
         st.text('tanks for your donations')
@@ -182,14 +205,25 @@ if account == "Buyer":
     st.multiselect('pick the art item being auctioned', ['Fight','Protection', 'The Ancestors'])
     
     sender = st.text_input('Enter account address')
+<<<<<<< HEAD
     if st.button("Place bid"):
         bid_hash = second_contract.functions.bid(sender).transact()
         highestBidder = second_contract.functions.highestBidder()
         if highestBidder == sender:
             st.success("Congratulation you won the auction")
             st.balloons()
+=======
+    st.text_input('Enter bid amount')
+    if st.button("Place bid"):
+            bid_hash = contract.functions.bid(sender).call() #change from transact
+            highestBidder = contract.functions.highestBidder().transact({'from': address, 'gas': 1000000})
+            if highestBidder == sender:
+                st.success("Congratulation you won the auction")
+                st.balloons();
+>>>>>>> 544ec708e0ed5ae4f0f4e2c8f1d38764b5fdd543
             
-
+# tokens = contract.functions.totalSupply().call()
+# token_id = st.selectbox("Choose an Art Token ID", list(range(tokens)))
 
 
 
