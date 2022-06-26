@@ -1,13 +1,12 @@
 import os
 import json
-
 from web3 import Web3
 from pathlib import Path
 from dotenv import load_dotenv
 import streamlit as st
 from PIL import Image
 from pinata import pin_file_to_ipfs, pin_json_to_ipfs, convert_data_to_json
-
+import time as pd
 load_dotenv("key.env")
 
 # Define and connect a new Web3 provider
@@ -25,7 +24,7 @@ st.markdown("### Ukraine aid auction")
 image4 = Image.open('./images/Evacuation.png')
 st.image(image4, caption='Evacuation')
 
-st.markdown("## Welcome to our Art Auction Fundraiser, to support non-profit organizations, This market serves to raise funds for the Ukraine invasion by auctioning art donated by different artist, please place a bid!!  ")
+st.markdown("## Welcome to our Art Auction Fundraiser, to support non-profit organizations, This market serves to raise funds for the Ukraine invation by auctioning art donated by different artist, please place a bid!!  ")
 
 
 # Cache the contract on load
@@ -38,7 +37,7 @@ def load_contract():
         certificate_abi = json.load(f)
 
     # Set the contract address (this is the address of the deployed contract)
-    contract_address = Web3.toChecksumAddress(0x88fe134209d8e6bbc8cff4a081c23fc8b0aba365)
+    contract_address = Web3.toChecksumAddress(0x2136e58f3b5c2f134dec7601e52e657e38c6e839)
 
     # Get the contract
     contract = w3.eth.contract(
@@ -113,7 +112,7 @@ def pin_appraisal_report(report_content):
 
 account_selection = ["Artist", "Buyer", "Donor"]
 
-account = st.radio('Are you an Artist, Buyer , or Donor?', account_selection)
+account = st.radio('Are you a Artist Donator , or you are a Buyer?', account_selection)
     #####################################################################################
     #### Artist
     #####################################################################################
@@ -123,7 +122,7 @@ if account == "Artist":
     address = st.text_input("artist_address")
     artwork_name = st.text_input("Enter the name of the artwork")
     artist_name = st.text_input("Enter the artist name")
-    initial_appraisal_value = st.text_input("Enter the initial appraisal amount")
+    initial_appraisal_value = st.number_input("Enter the initial appraisal amount in eth")
 
     # Use the Streamlit `file_uploader` function create the list of digital image file types(jpg, jpeg, or png) that will be uploaded to Pinata.
     file = st.file_uploader("Upload Artwork", type=["jpg", "jpeg", "png"])
@@ -132,14 +131,18 @@ if account == "Artist":
         # Use the `pin_artwork` helper function to pin the file to IPFS
         artwork_ipfs_hash = pin_artwork(artwork_name, file)
 
-        artwork_uri = f"ipfs://{artwork_ipfs_hash}"
+        tokenURI = f"https://gateway.pinata.cloud/ipfs/{artwork_ipfs_hash}"
 
         tx_hash = contract.functions.registerArtwork(
             address,
             artwork_name,
             artist_name,
             int(initial_appraisal_value),
+<<<<<<< HEAD
+            tokenURI
+=======
             # artwork_uri
+>>>>>>> 544ec708e0ed5ae4f0f4e2c8f1d38764b5fdd543
         ).transact({'from': address, 'gas': 1000000})
         receipt = w3.eth.waitForTransactionReceipt(tx_hash)
         st.write("Transaction receipt mined:")
@@ -148,6 +151,16 @@ if account == "Artist":
         st.markdown(f"[Artwork IPFS Gateway Link](https://ipfs.io/ipfs/{artwork_ipfs_hash})")
     st.markdown("---")
 
+<<<<<<< HEAD
+    if st.button("art_collection"):
+        art_collection = contract.functions.artCollection(address)
+      
+    token_id = st.number_input("enter the token id of the artwork you want to auction")
+    if st.button("create auction"):
+        creacteAuction = contract.functions.createAuction("token_id")
+    if st.button("end auction"):
+        endAuction = contract.funtion.endAuction("token_id")
+=======
     # if st.button("art_collection"):
        # art_collection = contract.functions.artCollection(0x8FeDec17fB9A312525754B5Ed8Add6c216D90F99)
       
@@ -156,21 +169,26 @@ if account == "Artist":
         tokens = contract.functions.totalSupply().call()
         token_id = st.selectbox("Choose an Art Token ID", tokens[-1])
         creacteAuction = contract.functions.createAuction(token_id).call()
+>>>>>>> 544ec708e0ed5ae4f0f4e2c8f1d38764b5fdd543
         
     ###########################################################################       
     ######## DONOR
     #############################################################################
 if account == "Donor":
+<<<<<<< HEAD
+    st.sidebar.radio('Select one:', ['Bitcoin', 'Etherium', "Dogecoin", "XRP", "Solana"])
+    amount = st.text_input("Enter amount you want to donate");
+    contributor_address = st.text_input("Enter account address");
+=======
     st.sidebar.radio('Select one:', ['Bitcoin', 'Ethereum', "Dogecoin", "XRP", "Solana"])
     donor_name = st.text_input("Enter Name", value='', key=0)
     amount = st.text_input("Enter amount you want to donate", value=0, key=1)
     contributor_address = st.text_input("Enter account address", value='', key=2)
     
+>>>>>>> 544ec708e0ed5ae4f0f4e2c8f1d38764b5fdd543
     
     if st.button("donate now"):
-        donation_hash = contract.functions.doDonation(id, donor_name, amount, address).transact({'from': address, 'gas': 1000000})
-        
-        st.text('thanks for your donations')
+        st.text('tanks for your donations')
         st.balloons()
 
     ################################################################################
@@ -187,6 +205,14 @@ if account == "Buyer":
     st.multiselect('pick the art item being auctioned', ['Fight','Protection', 'The Ancestors'])
     
     sender = st.text_input('Enter account address')
+<<<<<<< HEAD
+    if st.button("Place bid"):
+        bid_hash = second_contract.functions.bid(sender).transact()
+        highestBidder = second_contract.functions.highestBidder()
+        if highestBidder == sender:
+            st.success("Congratulation you won the auction")
+            st.balloons()
+=======
     st.text_input('Enter bid amount')
     if st.button("Place bid"):
             bid_hash = contract.functions.bid(sender).call() #change from transact
@@ -194,10 +220,10 @@ if account == "Buyer":
             if highestBidder == sender:
                 st.success("Congratulation you won the auction")
                 st.balloons();
+>>>>>>> 544ec708e0ed5ae4f0f4e2c8f1d38764b5fdd543
             
 # tokens = contract.functions.totalSupply().call()
 # token_id = st.selectbox("Choose an Art Token ID", list(range(tokens)))
-
 
 
 
